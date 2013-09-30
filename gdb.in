@@ -3,7 +3,7 @@ target remote :3333
 set $osp = $sp
 set $sp = $sp - 16
 set logging on
-b main.c:5
+b main.c:6
 
 #Initialization UART
 c
@@ -30,6 +30,8 @@ c
 #dump to binary file -> clone-string-mem
 set variable $string_mem = hello_string
 dump memory clone-string-mem $string_mem $string_mem+7
+
+#output to UART from hello_string
 while( *(char*) $string_mem  != '\0')
 call USART_SendData(USART2 , *(char*) $string_mem)
 set $string_mem = $string_mem + 1 
@@ -37,6 +39,6 @@ end
 
 #restore the string mem from binary file , then printf to gdb session .
 restore clone-string-mem binary $string_mem
-printf "%s" , $string_mem 
+printf "the output to uart string is %s" , $string_mem 
 
 
